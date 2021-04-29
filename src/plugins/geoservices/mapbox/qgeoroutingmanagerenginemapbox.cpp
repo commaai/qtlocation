@@ -111,6 +111,16 @@ static QVariantList parseMapboxVoiceInstructions(const QJsonArray &voiceInstruct
     return list;
 }
 
+static QVariantList parseMapboxBannerDirections(const QJsonArray &directions)
+{
+    QVariantList list;
+    for (const QJsonValue &direction : directions) {
+        if (direction.isString())
+            list << direction.toString();
+    }
+    return list;
+}
+
 static QVariantMap parseMapboxBannerComponent(const QJsonObject &bannerComponent)
 {
     QVariantMap map;
@@ -118,8 +128,20 @@ static QVariantMap parseMapboxBannerComponent(const QJsonObject &bannerComponent
     if (bannerComponent.value(QLatin1String("type")).isString())
         map.insert(QLatin1String("type"), bannerComponent.value(QLatin1String("type")).toString());
 
+    if (bannerComponent.value(QLatin1String("active")).isBool())
+        map.insert(QLatin1String("active"), bannerComponent.value(QLatin1String("active")).toBool());
+
+    if (bannerComponent.value(QLatin1String("directions")).isArray())
+        map.insert(QLatin1String("directions"), parseMapboxBannerDirections(bannerComponent.value(QLatin1String("directions")).toArray()));
+
+    if (bannerComponent.value(QLatin1String("active_direction")).isString())
+        map.insert(QLatin1String("active_direction"), bannerComponent.value(QLatin1String("active_direction")).toString());
+
     if (bannerComponent.value(QLatin1String("text")).isString())
         map.insert(QLatin1String("text"), bannerComponent.value(QLatin1String("text")).toString());
+
+    if (bannerComponent.value(QLatin1String("imageBaseURL")).isString())
+        map.insert(QLatin1String("imageBaseURL"), bannerComponent.value(QLatin1String("imageBaseURL")).toString());
 
     if (bannerComponent.value(QLatin1String("abbr")).isString())
         map.insert(QLatin1String("abbr"), bannerComponent.value(QLatin1String("abbr")).toString());
@@ -178,8 +200,8 @@ static QVariantMap parseMapboxBannerInstruction(const QJsonObject &bannerInstruc
     if (bannerInstruction.value(QLatin1String("secondary")).isObject())
         map.insert(QLatin1String("secondary"), parseMapboxBanner(bannerInstruction.value(QLatin1String("secondary")).toObject()));
 
-    if (bannerInstruction.value(QLatin1String("then")).isObject())
-        map.insert(QLatin1String("then"), parseMapboxBanner(bannerInstruction.value(QLatin1String("then")).toObject()));
+    if (bannerInstruction.value(QLatin1String("sub")).isObject())
+        map.insert(QLatin1String("sub"), parseMapboxBanner(bannerInstruction.value(QLatin1String("sub")).toObject()));
 
     return map;
 }
