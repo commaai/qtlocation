@@ -70,6 +70,7 @@ private:
     QNetworkAccessManager *m_networkManager;
     QByteArray m_userAgent;
     QString m_accessToken;
+    QString m_api_url;
     bool m_useMapboxText = false;
     QGeoRouteParser *m_routeParser = nullptr;
 };

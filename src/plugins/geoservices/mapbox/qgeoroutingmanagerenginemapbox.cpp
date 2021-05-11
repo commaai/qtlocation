@@ -253,6 +253,12 @@ QGeoRoutingManagerEngineMapbox::QGeoRoutingManagerEngineMapbox(const QVariantMap
         m_accessToken = parameters.value(QStringLiteral("mapbox.access_token")).toString();
     }
 
+    if (parameters.contains(QStringLiteral("mapbox.directions_api_url"))) {
+        m_api_url = parameters.value(QStringLiteral("mapbox.directions_api_url")).toString();
+    } else {
+        m_api_url = mapboxDirectionsApiPath;
+    }
+
     bool use_mapbox_text_instructions = true;
     if (parameters.contains(QStringLiteral("mapbox.routing.use_mapbox_text_instructions"))) {
         use_mapbox_text_instructions = parameters.value(QStringLiteral("mapbox.routing.use_mapbox_text_instructions")).toBool();
@@ -282,7 +288,7 @@ QGeoRouteReply* QGeoRoutingManagerEngineMapbox::calculateRoute(const QGeoRouteRe
     QNetworkRequest networkRequest;
     networkRequest.setHeader(QNetworkRequest::UserAgentHeader, m_userAgent);
 
-    QString url = mapboxDirectionsApiPath;
+    QString url = m_api_url;
 
     QGeoRouteRequest::TravelModes travelModes = request.travelModes();
     if (travelModes.testFlag(QGeoRouteRequest::PedestrianTravel)) {
