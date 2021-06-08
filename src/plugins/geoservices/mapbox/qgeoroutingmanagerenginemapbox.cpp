@@ -226,6 +226,10 @@ void QGeoRouteParserOsrmV5ExtensionMapbox::updateSegment(QGeoRouteSegment &segme
             m.setInstructionText(maneuverInstructionText);
     }
 
+    if (step.value(QLatin1String("duration_typical")).isDouble())
+        extendedAttributes.insert(QLatin1String("mapbox.duration_typical"),
+                                  step.value(QLatin1String("duration_typical")).toDouble());
+
     if (step.value(QLatin1String("voiceInstructions")).isArray())
         extendedAttributes.insert(QLatin1String("mapbox.voice_instructions"),
                                   parseMapboxVoiceInstructions(step.value(QLatin1String("voiceInstructions")).toArray()));
